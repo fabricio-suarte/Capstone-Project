@@ -65,9 +65,6 @@ public class TaskProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
                         String sortOrder) {
-        //TODO: Implement task query
-        //TODO: Expected "query all" Uri: content://com.google.developer.taskmaker/tasks
-        //TODO: Expected "query one" Uri: content://com.google.developer.taskmaker/tasks/{id}
 
         ArgumentHelper.validateNull(uri, "uri");
         ArgumentHelper.validateNull(projection, "projection");
@@ -115,8 +112,6 @@ public class TaskProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        //TODO: Implement new task insert
-        //TODO: Expected Uri: content://com.google.developer.taskmaker/tasks
 
         ArgumentHelper.validateNull(uri, "uri");
         ArgumentHelper.validateNull(values, "values");
@@ -147,8 +142,6 @@ public class TaskProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        //TODO: Implement existing task update
-        //TODO: Expected Uri: content://com.google.developer.taskmaker/tasks/{id}
 
         ArgumentHelper.validateNull(uri, "uri");
         ArgumentHelper.validateNull(values, "values");

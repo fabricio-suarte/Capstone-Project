@@ -45,8 +45,6 @@ public class TaskDetailActivity extends AppCompatActivity implements
         //Task must be passed to this activity as a valid provider Uri
         mTaskUri = getIntent().getData();
 
-        //TODO: Display attributes of the provided task in the UI
-
         mDescriptionView = (TextView) this.findViewById(R.id.detail_description);
         mDateView = (TextView) this.findViewById(R.id.detail_date);
         mPriorityView = (ImageView) this.findViewById(R.id.detail_priority);
@@ -85,7 +83,6 @@ public class TaskDetailActivity extends AppCompatActivity implements
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int day) {
-        //TODO: Handle date selection from a DatePickerFragment
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, day, 12, 0);

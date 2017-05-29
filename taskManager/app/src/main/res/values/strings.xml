@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">Task Manager</string>
     <string name="task_description">What Needs to Get Done?</string>
     <string name="task_priority">Priority Task</string>
@@ -20,4 +21,7 @@
     <string name="pref_sortBy_key" translatable="false">sort</string>
     <string name="pref_sortBy_default" translatable="false">default</string>
     <string name="pref_sortBy_due" translatable="false">due</string>
+
+
+    <string name="fragment_main_tag">fragmentMainTAG</string>
 </resources>

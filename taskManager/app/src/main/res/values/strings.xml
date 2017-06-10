@@ -10,17 +10,26 @@
     <string name="action_reminder">Set Reminder</string>
     <string name="action_delete">Delete Task</string>
     <string name="settings">Settings</string>
-    <string name="pref_sortOrder_title">Sort Order</string>
-    <string name="pref_sortBy_title">Sort By:</string>
-    <string name="pref_summary">Choose an order to sort your tasks.</string>
-    <string name="pref_sortBy_default_label">Default</string>
-    <string name="pref_sortBy_due_label">Due Date</string>
     <string name="reminder_title">Task Reminder</string>
     <string name="past_reminder_scheduled">It is not possible to schedule a reminder in the past! :)</string>
 
+    <string name="pref_sortOrderDialog_title">Sort Order</string>
+    <string name="pref_sortBy_title">Sort By:</string>
     <string name="pref_sortBy_key" translatable="false">sort</string>
+    <string name="pref_sortBy_default_label">Default</string>
+    <string name="pref_sortBy_due_label">Due Date</string>
     <string name="pref_sortBy_default" translatable="false">default</string>
     <string name="pref_sortBy_due" translatable="false">due</string>
+
+    <string name="pref_cleanupIntervalDialog_title">Cleanup \"done\" tasks interval</string>
+    <string name="pref_cleanupInterval_title">Cleanup interval:</string>
+    <string name="pref_cleanupInterval_key" translatable="false">cleanup</string>
+    <string name="pref_cleanupInterval_default_label" translatable="false">Default</string>
+    <string name="pref_cleanupInterval_long_label" translatable="false">Long</string>
+    <string name="pref_cleanupInterval_short_label" translatable="false">Short</string>
+    <string name="pref_cleanupInterval_default" translatable="false">default</string>
+    <string name="pref_cleanupInterval_long" translatable="false">long</string>
+    <string name="pref_cleanupInterval_short" translatable="false">short</string>
 
 
     <string name="fragment_main_tag">fragmentMainTAG</string>

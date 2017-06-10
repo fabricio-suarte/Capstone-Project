@@ -7,23 +7,30 @@ import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 
+import com.fabriciosuarte.taskmanager.R;
 import com.fabriciosuarte.taskmanager.util.ArgumentHelper;
 
 public class TaskProvider extends ContentProvider {
     private static final String TAG = TaskProvider.class.getSimpleName();
 
-    private static final int CLEANUP_JOB_ID = 43;
+    private static final int CLEANUP_JOB_ID = 51;
 
     private static final int TASKS = 100;
     private static final int TASKS_WITH_ID = 101;
+
+    private static final long CLEANUP_JOB_INTERVAL_DEFAULT = 4 * 3600 * 1000; //4 hours hour
+    private static final long CLEANUP_JOB_INTERVAL_LONG = 8 * 3600 * 1000; //8 hours
+    private static final long CLEANUP_JOB_INTERVAL_SHORT = 3600 * 1000; //1 hour
 
     private static final String SINGLE_TASK_SELECTION =
             String.format("%s = ?", DatabaseContract.TaskColumns._ID);
@@ -51,7 +58,7 @@ public class TaskProvider extends ContentProvider {
         mQueryBuilder = new SQLiteQueryBuilder();
         mQueryBuilder.setTables(DatabaseContract.TABLE_TASKS);
 
-        manageCleanupJob();
+        manageCleanupJob( this.getContext());
         return true;
     }
 
@@ -201,16 +208,56 @@ public class TaskProvider extends ContentProvider {
         return count;
     }
 
-    /* Initiate a periodic job to clear out completed items */
-    private void manageCleanupJob() {
-        Log.d(TAG, "Scheduling cleanup job");
-        JobScheduler jobScheduler = (JobScheduler) getContext()
+    /**
+     * Cancels any previous jobs and schedule a new one according to what is set on preferences
+     * @param context application context
+     */
+    public static void resetCleanupJob(Context context) {
+
+        if(context == null)
+            return;
+
+        JobScheduler jobScheduler = (JobScheduler) context
                 .getSystemService(Context.JOB_SCHEDULER_SERVICE);
 
-        //Run the job approximately every hour
-        long jobInterval = 60 * 60 * 1000;
+        jobScheduler.cancelAll();
+        manageCleanupJob(context);
+    }
 
-        ComponentName jobService = new ComponentName(getContext(), CleanupJobService.class);
+    /* Initiate a periodic job to clear out completed items */
+    private static void manageCleanupJob(Context context) {
+
+        if(context == null)
+            return;
+
+        //Let's get the current configuration
+        String key = context.getString(R.string.pref_cleanupInterval_key);
+        String defaultConfValue = context.getString(R.string.pref_cleanupInterval_default);
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        String currentConf = sp.getString(key, defaultConfValue);
+
+        long jobInterval;
+        if(currentConf.equalsIgnoreCase(defaultConfValue)) {
+            jobInterval = CLEANUP_JOB_INTERVAL_DEFAULT;
+        }
+        else if(currentConf.equalsIgnoreCase( context.getString(R.string.pref_cleanupInterval_short))) {
+            jobInterval = CLEANUP_JOB_INTERVAL_SHORT;
+        }
+        else if(currentConf.equalsIgnoreCase( context.getString(R.string.pref_cleanupInterval_long))) {
+            jobInterval = CLEANUP_JOB_INTERVAL_LONG;
+        }
+        else {
+            jobInterval = CLEANUP_JOB_INTERVAL_DEFAULT;
+        }
+
+        int hours = (int) (jobInterval / 1000) / 3600;
+        Log.d(TAG, "Scheduling cleanup job for " + String.valueOf(hours) + " hours...");
+
+        JobScheduler jobScheduler = (JobScheduler) context
+                .getSystemService(Context.JOB_SCHEDULER_SERVICE);
+
+        ComponentName jobService = new ComponentName(context, CleanupJobService.class);
         JobInfo task = new JobInfo.Builder(CLEANUP_JOB_ID, jobService)
                 .setPeriodic(jobInterval)
                 .setPersisted(true)

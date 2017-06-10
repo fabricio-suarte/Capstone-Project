@@ -10,4 +10,17 @@
         <item>@string/pref_sortBy_default</item>
         <item>@string/pref_sortBy_due</item>
     </string-array>
+
+    <!-- List preference cleanup interval display values-->
+    <string-array name="pref_cleanupInterval_entries">
+        <item>@string/pref_cleanupInterval_default_label</item>
+        <item>@string/pref_cleanupInterval_long_label</item>
+        <item>@string/pref_cleanupInterval_short_label</item>
+    </string-array>
+    <!-- List preference cleanup interval select values -->
+    <string-array name="pref_cleanupInterval_values">
+        <item>@string/pref_cleanupInterval_default</item>
+        <item>@string/pref_cleanupInterval_long</item>
+        <item>@string/pref_cleanupInterval_short</item>
+    </string-array>
 </resources>

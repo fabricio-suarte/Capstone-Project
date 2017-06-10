@@ -2,6 +2,7 @@ package com.fabriciosuarte.taskmanager.fragment;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -230,7 +231,11 @@ public class MainFragment extends Fragment implements
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
-        String sortKey = this.getString(R.string.pref_sortBy_key);
+        Context context = this.getContext();
+        if(context == null)
+            return;
+
+        String sortKey = this.getContext().getString(R.string.pref_sortBy_key);
 
         if(key != null && key.equals(sortKey)) {
             getLoaderManager().restartLoader(TASKS_LOADER, null, this);

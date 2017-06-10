@@ -3,11 +3,18 @@
 
     <ListPreference
         android:defaultValue="@string/pref_sortBy_default"
-        android:dialogTitle="@string/pref_sortBy_title"
+        android:dialogTitle="@string/pref_sortOrderDialog_title"
         android:entries="@array/pref_sortBy_entries"
         android:entryValues="@array/pref_sortBy_values"
         android:key="@string/pref_sortBy_key"
-        android:summary="@string/pref_summary"
-        android:title="@string/pref_sortOrder_title" />
+        android:title="@string/pref_sortBy_title" />
+
+    <ListPreference
+        android:defaultValue="@string/pref_cleanupInterval_default"
+        android:dialogTitle="@string/pref_cleanupIntervalDialog_title"
+        android:entries="@array/pref_cleanupInterval_entries"
+        android:entryValues="@array/pref_cleanupInterval_values"
+        android:key="@string/pref_cleanupInterval_key"
+        android:title="@string/pref_cleanupInterval_title" />
 
 </PreferenceScreen>

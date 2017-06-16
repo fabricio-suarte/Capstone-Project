@@ -54,7 +54,7 @@ public class TaskDetailFragment extends Fragment implements
     //region attributes
 
     private Uri mTaskUri;
-    private TaskDetailFragment.Callback fragmentListener;
+    private TaskDetailFragment.Callback mFragmentListener;
 
     @BindView(R.id.detail_description)
     TextView mDescriptionView;
@@ -76,10 +76,15 @@ public class TaskDetailFragment extends Fragment implements
             return;
 
         if(context instanceof TaskDetailFragment.Callback) {
-            this.fragmentListener = (TaskDetailFragment.Callback) context;
+            this.mFragmentListener = (TaskDetailFragment.Callback) context;
         }
         else {
-            throw new IllegalStateException("You must implement TaskDetailFragment.Callback in order to add this fragment!");
+
+            String message
+                    = this.getString(R.string.fragment_callback_not_implemented,
+                    TaskDetailFragment.Callback.class.getName());
+
+            throw new IllegalStateException(message);
         }
 
         super.onAttach(context);
@@ -114,7 +119,7 @@ public class TaskDetailFragment extends Fragment implements
 
                 TaskUpdateService.deleteTask(this.getContext(), mTaskUri);
 
-                this.fragmentListener.onTaskDeleted();
+                this.mFragmentListener.onTaskDeleted();
 
                 return true;
 

@@ -34,9 +34,11 @@
 
     <string name="fragment_main_tag">fragmentMainTAG</string>
     <string name="fragment_task_detail_tag">fragmentTaskDetailTAG</string>
+    <string name="fragment_add_task_tag">fragmentAddTaskTAG</string>
     <string name="fragment_location_tag">fragmentLocationTAG</string>
     <string name="fragment_map_tag">fragmentMapTAG</string>
 
     <string name="location_permission_not_granted">It was not possible to set your current location on the Map (missing location permission).</string>
     <string name="task_location_map_marker">Task location</string>
+    <string name="fragment_callback_not_implemented">You must implement %s in order to attach this fragment!</string>
 </resources>

@@ -28,6 +28,9 @@ android {
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
+
+        resValue "string", "google_maps_key",
+                (project.findProperty("GOOGLE_MAPS_API_KEY") ?: "")
     }
     buildTypes {
         release {
@@ -55,8 +58,10 @@ dependencies {
     compile "com.android.support:preference-v7:$supportLibVersion"
 
     //Firebase stuff
-    compile "com.google.firebase:firebase-core:$firebaseLibversion"
-    compile "com.google.firebase:firebase-crash:$firebaseLibversion"
+    compile "com.google.firebase:firebase-core:$firebaseLibVersion"
+    compile "com.google.firebase:firebase-crash:$firebaseLibVersion"
+    compile "com.google.android.gms:play-services-maps:$playServicesVersion"
+    compile "com.google.android.gms:play-services-location:$playServicesVersion"
 
     //Third party libs
     compile 'com.jakewharton:butterknife:8.5.1'

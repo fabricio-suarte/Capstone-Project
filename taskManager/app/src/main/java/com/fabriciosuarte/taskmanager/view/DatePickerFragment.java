@@ -10,6 +10,8 @@ import java.util.Calendar;
 /* Wrapper to show a managed date picker */
 public class DatePickerFragment extends DialogFragment {
 
+    DatePickerDialog.OnDateSetListener mOnDateSetListener;
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the current date as the default date in the picker
@@ -19,7 +21,11 @@ public class DatePickerFragment extends DialogFragment {
         int day = c.get(Calendar.DAY_OF_MONTH);
 
         // Create a new instance of DatePickerDialog and return it
-        return new DatePickerDialog(getActivity(),
-                (DatePickerDialog.OnDateSetListener) getActivity(), year, month, day);
+        return new DatePickerDialog(getActivity(), mOnDateSetListener, year, month, day);
+    }
+
+    public void setOnDateSetListener(DatePickerDialog.OnDateSetListener listener) {
+        if(listener != null)
+            this.mOnDateSetListener = listener;
     }
 }

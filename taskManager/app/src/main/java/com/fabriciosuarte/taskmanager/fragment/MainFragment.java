@@ -50,42 +50,11 @@ public class MainFragment extends Fragment implements
 
     //region attributes
 
-    private CallBack mContextListener;
     private TaskAdapter mAdapter;
-
-    //Views
-
-    //endregion
-
-    //region inner classes and interface definitions
-    /**
-     * Main's Fragment Callback interface
-     */
-    public interface CallBack {
-
-    }
 
     //endregion
 
     //region overrides on Fragment class
-
-//    @Override
-//    public void onAttach(Context context) {
-//        if(context == null)
-//            return;
-//
-//        super.onAttach(context);
-//
-//        //Verifies if the activity that is attaching this fragment implements its Callback interface
-//        if(context instanceof CallBack) {
-//            this.mContextListener = (CallBack) context;
-//        }
-//        else {
-//            String message = String.format("The given context '%s' does not implement this fragment CallBack interface!", context.toString());
-//            throw new UnsupportedOperationException(message);
-//        }
-//    }
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,7 +66,7 @@ public class MainFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View root = inflater.inflate(R.layout.fragment_main, container);
+        View root = inflater.inflate(R.layout.fragment_main, container, false);
 
         mAdapter = new TaskAdapter(null);
         mAdapter.setOnItemClickListener(this);

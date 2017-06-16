@@ -1,6 +1,6 @@
 <!-- The fragment container-->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fragment_detail_container"
+    android:id="@+id/fragment_location_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 

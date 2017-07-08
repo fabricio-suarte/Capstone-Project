@@ -2,7 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_pick_location"
-        android:title="@string/action_save_location"
+        android:id="@+id/action_search"
+        android:title="@string/action_search_location"
+        android:icon="@drawable/ic_action_search"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_set_location"
+        android:title="@string/action_set_location"
         app:showAsAction="always" />
 </menu>

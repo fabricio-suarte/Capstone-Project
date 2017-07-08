@@ -16,7 +16,19 @@ import com.fabriciosuarte.taskmanager.view.TaskTitleView;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * The Adapter for the main Task list
+ */
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> {
+
+    //region attributes
+
+    private Cursor mCursor;
+    private OnItemClickListener mOnItemClickListener;
+
+    //endregion
+
+    //region inner classes and interfaces definitions
 
     /* Callback for list item click events */
     public interface OnItemClickListener {
@@ -26,13 +38,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> {
     }
 
     /* ViewHolder for each task item */
-    public class TaskHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public TaskTitleView nameView;
-        public TextView dateView;
-        public ImageView priorityView;
-        public CheckBox checkBox;
+    class TaskHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        TaskTitleView nameView;
+        TextView dateView;
+        ImageView priorityView;
+        CheckBox checkBox;
 
-        public TaskHolder(View itemView) {
+        TaskHolder(View itemView) {
             super(itemView);
 
             nameView = (TaskTitleView) itemView.findViewById(R.id.text_description);
@@ -54,30 +66,17 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> {
         }
     }
 
-    private Cursor mCursor;
-    private OnItemClickListener mOnItemClickListener;
+    //endregion
 
+    //region constructor
 
     public TaskAdapter(Cursor cursor) {
         mCursor = cursor;
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        mOnItemClickListener = listener;
-    }
+    //endregion
 
-    private void completionToggled(TaskHolder holder) {
-
-        if (mOnItemClickListener != null) {
-            mOnItemClickListener.onItemToggled(holder.checkBox.isChecked(), holder.getAdapterPosition());
-        }
-    }
-
-    private void postItemClick(TaskHolder holder) {
-        if (mOnItemClickListener != null) {
-            mOnItemClickListener.onItemClick(holder.itemView, holder.getAdapterPosition());
-        }
-    }
+    //region overrides on RecyclerView.Adapter<TaskAdapter.TaskHolder>
 
     @Override
     public TaskHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -135,6 +134,28 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> {
         return (mCursor != null) ? mCursor.getCount() : 0;
     }
 
+
+    @Override
+    public long getItemId(int position) {
+        return getItem(position).id;
+    }
+
+    //endregion
+
+    //region public methods
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        mOnItemClickListener = listener;
+    }
+
+    public void swapCursor(Cursor cursor) {
+        if (mCursor != null) {
+            mCursor.close();
+        }
+        mCursor = cursor;
+        notifyDataSetChanged();
+    }
+
     /**
      * Retrieve a {@link Task} for the data at the given position.
      *
@@ -150,16 +171,23 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> {
         return new Task(mCursor);
     }
 
-    @Override
-    public long getItemId(int position) {
-        return getItem(position).id;
+    //endregion
+
+    //region private aux methods
+
+    private void completionToggled(TaskHolder holder) {
+
+        if (mOnItemClickListener != null) {
+            mOnItemClickListener.onItemToggled(holder.checkBox.isChecked(), holder.getAdapterPosition());
+        }
     }
 
-    public void swapCursor(Cursor cursor) {
-        if (mCursor != null) {
-            mCursor.close();
+    private void postItemClick(TaskHolder holder) {
+        if (mOnItemClickListener != null) {
+            mOnItemClickListener.onItemClick(holder.itemView, holder.getAdapterPosition());
         }
-        mCursor = cursor;
-        notifyDataSetChanged();
     }
+
+    //endregion
+
 }

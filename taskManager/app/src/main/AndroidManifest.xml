@@ -16,7 +16,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key"/>
 
-        <activity android:name="com.fabriciosuarte.taskmanager.MainActivity"
+        <activity android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -25,35 +25,64 @@
         </activity>
 
         <activity
-            android:name="com.fabriciosuarte.taskmanager.SettingsActivity"
+            android:name=".SettingsActivity"
             android:exported="false"
-            android:parentActivityName="com.fabriciosuarte.taskmanager.MainActivity"/>
+            android:parentActivityName=".MainActivity"/>
 
         <activity
-            android:name="com.fabriciosuarte.taskmanager.AddTaskActivity"
+            android:name=".AddTaskActivity"
             android:exported="false"
-            android:parentActivityName="com.fabriciosuarte.taskmanager.MainActivity"/>
+            android:parentActivityName=".MainActivity"/>
 
         <activity
-            android:name="com.fabriciosuarte.taskmanager.TaskDetailActivity"
+            android:name=".TaskDetailActivity"
             android:exported="false"
-            android:parentActivityName="com.fabriciosuarte.taskmanager.MainActivity"/>
+            android:parentActivityName=".MainActivity"/>
+
+        <activity android:name=".SearchableActivity"
+            android:label="@string/search_result_label"
+            android:exported="false"
+            android:launchMode="singleTop">
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+
+        </activity>
+
+
+        <!-- ATTENTION! SingleTask here is a kind of important!
+             It allows the same activity instance to be used when a search result is selected.
+             Take a look at the code in SearchableActivity class -->
+        <activity android:name=".LocationActivity"
+            android:exported="false"
+            android:parentActivityName=".AddTaskActivity"
+            android:launchMode="singleTask">
+
+            <!-- enable the search dialog to send searches to SearchableActivity -->
+            <meta-data android:name="android.app.default_searchable"
+                android:value=".SearchableActivity" />
+
+        </activity>
 
         <service
-            android:name="com.fabriciosuarte.taskmanager.data.TaskUpdateService"
+            android:name=".data.TaskUpdateService"
             android:exported="false" />
 
         <service
-            android:name="com.fabriciosuarte.taskmanager.reminders.ReminderAlarmService"
+            android:name=".reminders.ReminderAlarmService"
             android:exported="false" />
 
         <provider
-            android:name="com.fabriciosuarte.taskmanager.data.TaskProvider"
+            android:name=".data.TaskProvider"
             android:authorities="com.fabriciosuarte.taskmanager"
             android:exported="false"/>
 
         <service
-            android:name="com.fabriciosuarte.taskmanager.data.CleanupJobService"
+            android:name=".data.CleanupJobService"
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="true"/>
 

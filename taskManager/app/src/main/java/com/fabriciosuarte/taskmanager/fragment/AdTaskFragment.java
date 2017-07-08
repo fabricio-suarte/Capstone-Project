@@ -1,13 +1,16 @@
 package com.fabriciosuarte.taskmanager.fragment;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.SwitchCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
+import com.fabriciosuarte.taskmanager.LocationActivity;
 import com.fabriciosuarte.taskmanager.R;
 import com.fabriciosuarte.taskmanager.data.DatabaseContract;
 import com.fabriciosuarte.taskmanager.data.TaskUpdateService;
@@ -37,7 +41,10 @@ public class AdTaskFragment extends Fragment implements
 
     //region constants
 
+    private static final String LOG_TAG = AdTaskFragment.class.getCanonicalName();
+
     private static final String DUE_DATE_KEY = "dueDateKey";
+    private static final int LOCATION_REQUEST_CODE = 100;
 
     //endregion
 
@@ -54,6 +61,9 @@ public class AdTaskFragment extends Fragment implements
 
     @BindView(R.id.text_date)
     TextView mDueDateView;
+
+    @BindView(R.id.text_location)
+    TextView mLocationView;
 
     private AdTaskFragment.Callback mFragmentListener;
 
@@ -99,6 +109,8 @@ public class AdTaskFragment extends Fragment implements
         }
 
         mDueDateView.setOnClickListener(this);
+        mLocationView.setOnClickListener(this);
+
         updateDateDisplay();
 
         return root;
@@ -129,17 +141,44 @@ public class AdTaskFragment extends Fragment implements
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode != LOCATION_REQUEST_CODE)
+            return;
+
+        if(resultCode == Activity.RESULT_OK) {
+            String location = data.getStringExtra(LocationActivity.LOCATION_SET);
+
+            Log.d(LOG_TAG, location);
+        }
+    }
+
     //endregion
 
     //region View.OnClickListener implementation
 
-    /* Click events on Due Date */
+    /* Click events on Due Date and Location */
     @Override
     public void onClick(View v) {
-        DatePickerFragment dialogFragment = new DatePickerFragment();
-        dialogFragment.setOnDateSetListener(this);
+        int id = v.getId();
 
-        dialogFragment.show(getFragmentManager(), "datePicker");
+        switch(id) {
+            case R.id.text_date:
+
+                DatePickerFragment dialogFragment = new DatePickerFragment();
+                dialogFragment.setOnDateSetListener(this);
+
+                dialogFragment.show(getFragmentManager(), "datePicker");
+
+                break;
+
+            case R.id.text_location:
+
+                Intent intent = new Intent(this.getContext(), LocationActivity.class);
+                this.startActivityForResult(intent, LOCATION_REQUEST_CODE);
+
+                break;
+        }
     }
 
     //endregion

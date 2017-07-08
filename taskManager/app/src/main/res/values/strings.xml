@@ -2,12 +2,17 @@
 <resources>
 
     <string name="app_name">Task Manager</string>
+    <string name="search_result_label">Task Manager - location search result</string>
     <string name="task_description">What Needs to Get Done?</string>
+    <string name="search_location_description">Where it is going to take place?</string>
+    <string name="search_no_results_found">No results were found for your search.</string>
     <string name="task_priority">Priority Task</string>
     <string name="task_date">Due Date</string>
+    <string name="task_location">Location</string>
     <string name="date_empty">Not Set</string>
     <string name="action_save">Save</string>
-    <string name="action_save_location">Save location</string>
+    <string name="action_set_location">Set location</string>
+    <string name="action_search_location">Search location</string>
     <string name="action_reminder">Set Reminder</string>
     <string name="action_delete">Delete Task</string>
     <string name="settings">Settings</string>

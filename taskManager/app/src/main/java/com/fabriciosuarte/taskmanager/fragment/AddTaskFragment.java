@@ -35,15 +35,17 @@ import butterknife.ButterKnife;
 /**
  * The Ad task fragment
  */
-public class AdTaskFragment extends Fragment implements
+public class AddTaskFragment extends Fragment implements
         DatePickerDialog.OnDateSetListener,
         View.OnClickListener {
 
     //region constants
 
-    private static final String LOG_TAG = AdTaskFragment.class.getCanonicalName();
+    private static final String LOG_TAG = AddTaskFragment.class.getCanonicalName();
 
     private static final String DUE_DATE_KEY = "dueDateKey";
+    private static final String LOCATION_KEY = "locationKey";
+
     private static final int LOCATION_REQUEST_CODE = 100;
 
     //endregion
@@ -52,6 +54,9 @@ public class AdTaskFragment extends Fragment implements
 
     //Selected due date, stored as a timestamp
     private long mDueDate = Long.MAX_VALUE;
+
+    //Selected location
+    private String mLocation = null;
 
     @BindView(R.id.text_input_description)
     TextInputEditText mDescriptionView;
@@ -65,7 +70,7 @@ public class AdTaskFragment extends Fragment implements
     @BindView(R.id.text_location)
     TextView mLocationView;
 
-    private AdTaskFragment.Callback mFragmentListener;
+    private AddTaskFragment.Callback mFragmentListener;
 
     //endregion
 
@@ -76,13 +81,13 @@ public class AdTaskFragment extends Fragment implements
         if(context == null)
             return;
 
-        if(context instanceof AdTaskFragment.Callback) {
-            this.mFragmentListener = (AdTaskFragment.Callback) context;
+        if(context instanceof AddTaskFragment.Callback) {
+            this.mFragmentListener = (AddTaskFragment.Callback) context;
         }
         else {
             String message
                     = this.getString(R.string.fragment_callback_not_implemented,
-                    AdTaskFragment.Callback.class.getName());
+                    AddTaskFragment.Callback.class.getName());
 
             throw new IllegalStateException(message);
         }
@@ -106,12 +111,13 @@ public class AdTaskFragment extends Fragment implements
 
         if(savedInstanceState != null) {
             mDueDate = savedInstanceState.getLong(DUE_DATE_KEY);
+            mLocation = savedInstanceState.getString(LOCATION_KEY);
         }
 
         mDueDateView.setOnClickListener(this);
         mLocationView.setOnClickListener(this);
 
-        updateDateDisplay();
+        this.updateDateDisplay();
 
         return root;
     }
@@ -120,6 +126,7 @@ public class AdTaskFragment extends Fragment implements
     public void onSaveInstanceState(Bundle outState) {
 
         outState.putLong(DUE_DATE_KEY, mDueDate);
+        outState.putString(LOCATION_KEY, mLocation);
 
         super.onSaveInstanceState(outState);
     }
@@ -134,13 +141,14 @@ public class AdTaskFragment extends Fragment implements
 
         //noinspection SimplifiableIfStatement
         if (item.getItemId() == R.id.action_save) {
-            saveItem();
+            this.saveItem();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    /* Result for the "LocationActivity" start... */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode != LOCATION_REQUEST_CODE)
@@ -149,7 +157,10 @@ public class AdTaskFragment extends Fragment implements
         if(resultCode == Activity.RESULT_OK) {
             String location = data.getStringExtra(LocationActivity.LOCATION_SET);
 
-            Log.d(LOG_TAG, location);
+            Log.d(LOG_TAG, "Result location: " + location);
+
+            mLocation = location;
+            this.updateDateDisplay();
         }
     }
 
@@ -220,6 +231,10 @@ public class AdTaskFragment extends Fragment implements
         return mDueDate;
     }
 
+    public String getLocationSelection() {
+        return mLocation;
+    }
+
     private void updateDateDisplay() {
         if (getDateSelection() == Long.MAX_VALUE) {
             mDueDateView.setText(R.string.date_empty);
@@ -227,15 +242,23 @@ public class AdTaskFragment extends Fragment implements
             CharSequence formatted = DateHelper.format(mDueDate);
             mDueDateView.setText(formatted);
         }
+
+        if(mLocation == null) {
+            mLocationView.setText(R.string.location_empty);
+        }
+        else {
+            mLocationView.setText(mLocation);
+        }
     }
 
     private void saveItem() {
         //Insert a new item
-        ContentValues values = new ContentValues(4);
+        ContentValues values = new ContentValues(5);
         values.put(DatabaseContract.TaskColumns.DESCRIPTION, mDescriptionView.getText().toString());
         values.put(DatabaseContract.TaskColumns.IS_PRIORITY, mPrioritySelect.isChecked() ? 1 : 0);
         values.put(DatabaseContract.TaskColumns.IS_COMPLETE, 0);
-        values.put(DatabaseContract.TaskColumns.DUE_DATE, getDateSelection());
+        values.put(DatabaseContract.TaskColumns.DUE_DATE, this.getDateSelection());
+        values.put(DatabaseContract.TaskColumns.LOCATION, this.getLocationSelection());
 
         TaskUpdateService.insertNewTask(this.getContext(), values);
 
@@ -246,9 +269,9 @@ public class AdTaskFragment extends Fragment implements
 
     //region static factory methods
 
-    public static AdTaskFragment create() {
+    public static AddTaskFragment create() {
 
-        return new AdTaskFragment();
+        return new AddTaskFragment();
     }
 
     //endregion

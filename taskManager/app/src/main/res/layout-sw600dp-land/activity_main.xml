@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto">
+
+    <include layout="@layout/toolbar"
+        android:id="@+id/include_tool_bar"/>
+
+    <!-- This is used as a strut to create two columns in our RelativeLayout -->
+    <android.support.v4.widget.Space
+        android:id="@+id/layout_center"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_centerInParent="true" />
+
+    <!-- The static fragment -->
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/fragment_main_land"
+        android:name="com.fabriciosuarte.taskmanager.fragment.MainFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/include_tool_bar"
+        android:layout_toStartOf="@id/layout_center"
+        android:tag="@string/fragment_main_tag"
+        tools:layout="@layout/fragment_main" />
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/detail_layout_holder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toEndOf="@id/layout_center"
+        android:layout_below="@id/include_tool_bar"
+        android:layout_marginTop="@dimen/card_view_detail_top_margin"
+        android:layout_marginBottom="@dimen/card_view_vertical_margin"
+        android:layout_marginStart="@dimen/card_view_horizontal_margin"
+        android:layout_marginEnd="@dimen/card_view_horizontal_margin"
+        card_view:cardElevation="@dimen/card_view_elevation">
+
+    </android.support.v7.widget.CardView>
+
+</RelativeLayout>

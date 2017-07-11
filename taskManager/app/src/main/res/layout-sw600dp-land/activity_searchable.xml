@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_gravity="center_horizontal"
+    android:layout_width="600dp"
+    android:layout_height="match_parent"
+    card_view:cardElevation="@dimen/card_view_elevation">
 
     <ProgressBar
         android:id="@+id/search_progress_bar"
@@ -29,4 +32,4 @@
         android:visibility="gone"
         tools:text="Empty view message, error status, etc." />
 
-</FrameLayout>
+</android.support.v7.widget.CardView>

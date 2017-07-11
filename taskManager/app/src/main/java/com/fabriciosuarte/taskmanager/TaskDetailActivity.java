@@ -18,9 +18,6 @@ public class TaskDetailActivity extends AppCompatActivity
 
         this.setContentView(R.layout.activity_task_detail);
 
-        if(savedInstanceState != null)
-            return;
-
         Uri taskUri = this.getIntent().getData();
         Fragment frag = TaskDetailFragment.create(taskUri);
 

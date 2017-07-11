@@ -7,7 +7,9 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -32,6 +34,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 
@@ -45,7 +48,7 @@ import butterknife.ButterKnife;
  * Location fragment
  */
 public class LocationFragment extends Fragment
-        implements OnMapReadyCallback, OnSuccessListener<Location>,
+        implements OnMapReadyCallback, OnSuccessListener<Location>, OnFailureListener,
         DialogInterface.OnCancelListener, View.OnClickListener {
 
     //region constants
@@ -63,6 +66,9 @@ public class LocationFragment extends Fragment
 
     @BindView(R.id.fab_last_know_location)
     View mFabLastKnownLocation;
+
+    @BindView(R.id.set_location_progress_bar)
+    View mSetLocationProgressBar;
 
     private GoogleMap mMap;
     private Marker mLocationMarker;
@@ -174,6 +180,9 @@ public class LocationFragment extends Fragment
             if(this.mLocationMarker != null) {
                 mCallbackListener.onSearchRequested(mLocationMarker.getPosition());
             }
+            else{
+                mCallbackListener.onSearchRequested(null);
+            }
 
             return true;
         }
@@ -211,7 +220,7 @@ public class LocationFragment extends Fragment
 
     //endregion
 
-    //region OnSuccessListener<Location> implementation
+    //region com.google.android.gms.tasks listeners implementation - OnSuccessListener<Location>, OnFailureListener
 
     @Override
     public void onSuccess(Location location) {
@@ -220,6 +229,14 @@ public class LocationFragment extends Fragment
 
         LatLng coordinates = new LatLng(location.getLatitude(), location.getLongitude());
         this.updateLocationMark(coordinates);
+    }
+
+    @Override
+    public void onFailure(@NonNull Exception e) {
+        Toast.makeText(this.getActivity(),
+                getText(R.string.last_know_location_failed),
+                Toast.LENGTH_LONG)
+                .show();
     }
 
     //endregion
@@ -265,6 +282,14 @@ public class LocationFragment extends Fragment
 
     }
 
+    /**
+     * This method set user's last known location on the map. Usually, it will be called by
+     * the activity after confirmation of "Location" permission
+     */
+    public void setDefaultLocation() {
+        this.setDefaultLocationOnMap();
+    }
+
     //endregion
 
     //region private aux methods
@@ -290,15 +315,8 @@ public class LocationFragment extends Fragment
 
             this.mFusedLocationClient
                     .getLastLocation()
-                    .addOnSuccessListener(this);
-
-        }
-        else {
-            Toast toast = Toast.makeText(this.getContext(),
-                    R.string.location_permission_not_granted,
-                    Toast.LENGTH_LONG);
-
-            toast.show();
+                    .addOnSuccessListener(this)
+                    .addOnFailureListener(this);
         }
     }
 
@@ -321,41 +339,94 @@ public class LocationFragment extends Fragment
 
     private void processSetLocation() {
 
-        Address locationAddress = null;
+        if(!mMapFragmentLoaded) {
+            Toast.makeText(this.getActivity(),
+                    this.getText(R.string.google_services_error),
+                    Toast.LENGTH_LONG).show();
+
+            return;
+        }
 
         if(mAddress != null) {
-            locationAddress = mAddress;
+            this.raiseOnLocationSet(mAddress);
         }
         else {
 
-            //We don't have an address set... the user didn't search and picked one.
-            if (SystemHelper.isConnected(this.getActivity())){
-
-                Geocoder geocoder = new Geocoder(this.getActivity());
-                LatLng markerPosition = mLocationMarker.getPosition();
-
-                try {
-                    List<Address> addresses = geocoder
-                            .getFromLocation(markerPosition.latitude, markerPosition.longitude, 1);
-
-                    locationAddress = addresses.get(0);
-                }
-                catch (IOException ex) {
-                    //TODO: handle this properly!
-                }
-            }
-            else {
-                //TODO: handle no connection scenario
-            }
+            /*We don't have an address set... the user didn't search and picked one. Let's try
+              to get it from the current marker on Map using Geocoder API */
+            this.processSetLocationAsync();
         }
+    }
 
-        if(locationAddress != null) {
-            String locationToReturn
-                    = String.format(LOCATION_TO_RETURN_FORMAT, locationAddress.getAddressLine(0),
-                    locationAddress.getLocality());
+    /* This method was only created to avoid accessing Geocoder API in the main thread */
+    private void processSetLocationAsync() {
 
-            mCallbackListener.onLocationSet(locationToReturn);
-        }
+       AsyncTask<LatLng, Void, Address> myTask = new AsyncTask<LatLng, Void, Address>() {
+
+           @Override
+           protected void onPreExecute() {
+               mSetLocationProgressBar.setVisibility(View.VISIBLE);
+           }
+
+           @Override
+           protected Address doInBackground(LatLng... params) {
+               Address address = null;
+
+               if (SystemHelper.isConnected(getActivity())) {
+
+                   Geocoder geocoder = new Geocoder(getActivity());
+                   LatLng markerPosition = params[0];
+
+                   try {
+                       List<Address> addresses = geocoder
+                               .getFromLocation(markerPosition.latitude, markerPosition.longitude, 1);
+
+                       address = addresses.get(0);
+
+                   } catch (IOException ex) {
+                       return null;
+                   }
+               }
+
+               return address;
+           }
+
+           @Override
+           protected void onPostExecute(Address address) {
+
+               mSetLocationProgressBar.setVisibility(View.GONE);
+
+               if(address != null) {
+                   raiseOnLocationSet(address);
+               }
+               else {
+                   Toast.makeText(getActivity(),
+                           getText(R.string.connectivity_error),
+                           Toast.LENGTH_LONG)
+                           .show();
+               }
+           }
+       };
+
+       if(mLocationMarker != null) {
+           LatLng markerPosition = mLocationMarker.getPosition();
+           myTask.execute(markerPosition);
+       }
+       else {
+           Toast.makeText(this.getActivity(),
+                   getText(R.string.location_not_set_on_map),
+                   Toast.LENGTH_LONG).show();
+       }
+    }
+
+
+    private void raiseOnLocationSet(Address address) {
+
+        String locationToReturn
+                = String.format(LOCATION_TO_RETURN_FORMAT, address.getAddressLine(0),
+                address.getLocality());
+
+        mCallbackListener.onLocationSet(locationToReturn);
     }
 
     //endregion

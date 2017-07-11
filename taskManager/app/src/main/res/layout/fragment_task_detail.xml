@@ -5,14 +5,24 @@
     android:layout_height="match_parent"
     android:layout_margin="@dimen/activity_horizontal_margin">
 
+    <ImageView
+        android:id="@+id/detail_priority"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        tools:background="@drawable/ic_priority"/>
+
     <TextView
         android:id="@+id/detail_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
+        android:layout_toStartOf="@id/detail_priority"
         android:textAppearance="?android:textAppearanceLarge"
-        tools:text="Description" />
+        tools:text="Description example" />
 
     <TextView
         android:id="@+id/detail_date"
@@ -23,12 +33,14 @@
         android:textAppearance="?android:textAppearanceMedium"
         tools:text="09/30/1977" />
 
-    <ImageView
-        android:id="@+id/detail_priority"
+    <TextView
+        android:id="@+id/detail_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        tools:background="@drawable/ic_priority"/>
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_below="@id/detail_date"
+        android:layout_alignParentStart="true"
+        android:textAppearance="?android:textAppearanceMedium"
+        tools:text="Vila da Penha, RJ" />
 
 </RelativeLayout>

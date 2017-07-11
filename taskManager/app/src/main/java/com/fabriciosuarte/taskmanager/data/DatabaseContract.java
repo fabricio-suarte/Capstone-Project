@@ -6,7 +6,7 @@ import android.provider.BaseColumns;
 
 public class DatabaseContract {
     //Database schema information
-    public static final String TABLE_TASKS = "tasks";
+    static final String TABLE_TASKS = "tasks";
 
     public static final class TaskColumns implements BaseColumns {
         //Task description
@@ -14,10 +14,15 @@ public class DatabaseContract {
 
         //Completed marker
         public static final String IS_COMPLETE = "is_complete";
+
         //Priority marker
         public static final String IS_PRIORITY = "is_priority";
+
         //Completion date (can be null)
         public static final String DUE_DATE = "due_date";
+
+        //Task location (can be null)
+        public static final String LOCATION = "location";
 
         public static String[] getAll() {
             return new String[] {
@@ -25,13 +30,14 @@ public class DatabaseContract {
                     DESCRIPTION,
                     IS_COMPLETE,
                     IS_PRIORITY,
-                    DUE_DATE
+                    DUE_DATE,
+                    LOCATION
             };
         }
     }
 
     //Unique authority string for the content provider
-    public static final String CONTENT_AUTHORITY = "com.fabriciosuarte.taskmanager";
+    static final String CONTENT_AUTHORITY = "com.fabriciosuarte.taskmanager";
 
     /* Sort order constants */
     //Priority first, Completed last, the rest by date
@@ -53,10 +59,10 @@ public class DatabaseContract {
     public static String getColumnString(Cursor cursor, String columnName) {
         return cursor.getString( cursor.getColumnIndex(columnName) );
     }
-    public static int getColumnInt(Cursor cursor, String columnName) {
+    static int getColumnInt(Cursor cursor, String columnName) {
         return cursor.getInt( cursor.getColumnIndex(columnName) );
     }
-    public static long getColumnLong(Cursor cursor, String columnName) {
+    static long getColumnLong(Cursor cursor, String columnName) {
         return cursor.getLong( cursor.getColumnIndex(columnName) );
     }
 }

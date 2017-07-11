@@ -62,6 +62,9 @@ public class TaskDetailFragment extends Fragment implements
     @BindView(R.id.detail_date)
     TextView mDateView;
 
+    @BindView(R.id.detail_location)
+    TextView mLocationView;
+
     @BindView(R.id.detail_priority)
     ImageView mPriorityView;
 
@@ -203,7 +206,14 @@ public class TaskDetailFragment extends Fragment implements
                 mDateView.setText(DateHelper.format(date));
             }
             else {
-                mDateView.setText( getText(R.string.date_empty));
+                mDateView.setText( getText(R.string.detail_date_empty));
+            }
+
+            if(task.hasLocation()) {
+                mLocationView.setText( task.location);
+            }
+            else {
+                mLocationView.setText( getText(R.string.detail_location_empty));
             }
 
             if(task.isPriority) {

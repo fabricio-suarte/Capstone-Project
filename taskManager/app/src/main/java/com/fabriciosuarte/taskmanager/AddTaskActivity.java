@@ -4,9 +4,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 
-import com.fabriciosuarte.taskmanager.fragment.AdTaskFragment;
+import com.fabriciosuarte.taskmanager.fragment.AddTaskFragment;
 
-public class AddTaskActivity extends AppCompatActivity implements AdTaskFragment.Callback {
+public class AddTaskActivity extends AppCompatActivity implements AddTaskFragment.Callback {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,7 +16,7 @@ public class AddTaskActivity extends AppCompatActivity implements AdTaskFragment
         if(savedInstanceState != null)
             return;
 
-        Fragment frag = AdTaskFragment.create();
+        Fragment frag = AddTaskFragment.create();
 
         this.getSupportFragmentManager()
                 .beginTransaction()
@@ -28,7 +28,7 @@ public class AddTaskActivity extends AppCompatActivity implements AdTaskFragment
 
     //endregion
 
-    //region AdTaskFragment.Callback implementation
+    //region AddTaskFragment.Callback implementation
 
     @Override
     public void onTaskSaved() {

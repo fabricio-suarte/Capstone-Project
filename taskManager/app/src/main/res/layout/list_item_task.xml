@@ -23,7 +23,7 @@
         android:layout_toStartOf="@+id/priority"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textAppearance="?android:textAppearanceLarge"
+        android:textAppearance="?android:textAppearanceMedium"
         tools:text="Call Mom" />
 
     <TextView

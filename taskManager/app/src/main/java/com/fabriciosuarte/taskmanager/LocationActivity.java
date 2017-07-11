@@ -73,8 +73,14 @@ public class LocationActivity extends AppCompatActivity implements LocationFragm
         if(requestCode == ACCESS_COARSE_LOCATION_REQUEST_CODE) {
 
             if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Dialog m = new Dialog(this);
-                m.show();
+
+                LocationFragment frag = (LocationFragment) this.getSupportFragmentManager()
+                        .findFragmentByTag(  this.getString(R.string.fragment_location_tag));
+
+                frag.setDefaultLocation();
+            }
+            else{
+                this.finish();
             }
         }
     }

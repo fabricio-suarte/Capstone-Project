@@ -15,6 +15,15 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:src="@drawable/ic_fab_my_location"
-        android:layout_margin="@dimen/activity_horizontal_margin"/>
+        android:layout_margin="@dimen/activity_horizontal_margin" />
+
+    <!-- ATTENTION! Let the progress bar here, as the last view in the layout (from top to bottom).
+         The kind of "z-index" of views is set this way (last view is shown on top) -->
+    <ProgressBar
+        android:id="@+id/set_location_progress_bar"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
 
 </FrameLayout>

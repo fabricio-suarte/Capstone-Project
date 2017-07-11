@@ -51,10 +51,38 @@ public class MainFragment extends Fragment implements
     //region attributes
 
     private TaskAdapter mAdapter;
+    private MainFragment.Callback mCallbackListener;
+
+    //endregion
+
+    //region inner classes / interfaces
+
+    public interface Callback {
+        void onTaskSelected(Uri taskUri);
+    }
 
     //endregion
 
     //region overrides on Fragment class
+
+    @Override
+    public void onAttach(Context context) {
+        if(context == null)
+            return;
+
+        if(context instanceof MainFragment.Callback) {
+            this.mCallbackListener = (MainFragment.Callback) context;
+        }
+        else {
+            String message
+                    = this.getString(R.string.fragment_callback_not_implemented,
+                    MainFragment.Callback.class.getName());
+
+            throw new IllegalStateException(message);
+        }
+
+        super.onAttach(context);
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,7 +94,7 @@ public class MainFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View root = inflater.inflate(R.layout.fragment_main, container, false);
+        View root = inflater.inflate(R.layout.fragment_main, container, true);
 
         mAdapter = new TaskAdapter(null);
         mAdapter.setOnItemClickListener(this);
@@ -82,9 +110,13 @@ public class MainFragment extends Fragment implements
         PreferenceManager.getDefaultSharedPreferences(this.getActivity())
                 .registerOnSharedPreferenceChangeListener(this);
 
-        //Attention! Set the toolbar to the AppCompatActivity! otherwise, it is not possible
+        //Attention! Set the toolbar to the AppCompatActivity for the proper layout!
+        //Otherwise, it is not possible
         //to inflate menu items (onCreateOptionMenu) method is not called.
-        ((AppCompatActivity) this.getActivity()).setSupportActionBar( (Toolbar) root.findViewById(R.id.main_toolbar));
+        Toolbar toolBar = (Toolbar) root.findViewById(R.id.main_toolbar);
+        if(toolBar != null) {
+            ((AppCompatActivity) this.getActivity()).setSupportActionBar(toolBar);
+        }
 
         this.getLoaderManager().initLoader(TASKS_LOADER, null, this);
 
@@ -130,10 +162,7 @@ public class MainFragment extends Fragment implements
         long taskId = mAdapter.getItem(position).id;
         Uri taskUri = ContentUris.withAppendedId(DatabaseContract.CONTENT_URI, taskId);
 
-        Intent intent = new Intent(this.getActivity(), TaskDetailActivity.class);
-        intent.setData(taskUri);
-
-        startActivity(intent);
+        mCallbackListener.onTaskSelected(taskUri);
     }
 
 

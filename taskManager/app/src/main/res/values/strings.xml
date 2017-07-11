@@ -9,7 +9,10 @@
     <string name="task_priority">Priority Task</string>
     <string name="task_date">Due Date</string>
     <string name="task_location">Location</string>
-    <string name="date_empty">Not Set</string>
+    <string name="date_empty">not set</string>
+    <string name="detail_date_empty">Due date not set</string>
+    <string name="location_empty">not set</string>
+    <string name="detail_location_empty">Location not set</string>
     <string name="action_save">Save</string>
     <string name="action_set_location">Set location</string>
     <string name="action_search_location">Search location</string>
@@ -43,7 +46,10 @@
     <string name="fragment_location_tag">fragmentLocationTAG</string>
     <string name="fragment_map_tag">fragmentMapTAG</string>
 
-    <string name="location_permission_not_granted">It was not possible to set your current location on the Map (missing location permission).</string>
+    <string name="last_know_location_failed">It was not possible getting your last known location. </string>
+    <string name="location_not_set_on_map">Location was not set on map. Try clicking on \'My location\' option or use the search</string>
+    <string name="google_services_error">Google Services is not available. Try to update your device.</string>
+    <string name="connectivity_error">Ops&#8230; Something went wrong. Check your connection and try again.</string>
     <string name="task_location_map_marker">Task location</string>
     <string name="fragment_callback_not_implemented">You must implement %s in order to attach this fragment!</string>
 </resources>

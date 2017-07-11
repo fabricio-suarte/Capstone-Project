@@ -16,12 +16,14 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.fabriciosuarte.taskmanager.data.LocationSearchResultAdapter;
+import com.fabriciosuarte.taskmanager.util.SystemHelper;
 import com.google.android.gms.maps.model.LatLng;
-
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * The searchable activity...
@@ -43,7 +45,14 @@ public class SearchableActivity extends AppCompatActivity
 
     //region attributes
 
+    private boolean mNotifyConnectiviyError;
     private LocationSearchResultAdapter mAdapter;
+
+    @BindView(R.id.search_progress_bar)
+    View mSearchProgressBar;
+
+    @BindView(R.id.search_result_empty_view)
+    TextView mEmptyView;
 
     //endregion
 
@@ -54,11 +63,11 @@ public class SearchableActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_searchable);
 
-        TextView emptyView = (TextView) this.findViewById(R.id.search_result_empty_view);
+        ButterKnife.bind(this);
 
         mAdapter = new LocationSearchResultAdapter();
         mAdapter.setOnItemClickListener(this);
-        mAdapter.setEmptyView(emptyView);
+        mAdapter.setEmptyView(mEmptyView);
 
         RecyclerView recyclerView = (RecyclerView) this.findViewById(R.id.recycler_view_search_result);
         recyclerView.setHasFixedSize(true);
@@ -112,27 +121,34 @@ public class SearchableActivity extends AppCompatActivity
                     currentLocation = extra.getParcelable(SearchableActivity.CURRENT_LOCATION);
                 }
 
-                Geocoder geocoder = new Geocoder(this.getContext());
                 List<Address> addresses;
-                try {
 
-                    if(currentLocation != null) {
-                        addresses = geocoder
-                                .getFromLocationName(query,
-                                        MAX_RESULTS,
-                                        getLowerLeftLatitude(currentLocation),
-                                        getLowerLeftLongitude(currentLocation),
-                                        getUpperRightLatitude(currentLocation),
-                                        getUpperRightLongitude(currentLocation)
-                                );
-                    }
-                    else {
-                        addresses = geocoder.getFromLocationName(query, MAX_RESULTS);
+                if(SystemHelper.isConnected(getContext())) {
+
+                    Geocoder geocoder = new Geocoder(this.getContext());
+                    try {
+
+                        if (currentLocation != null) {
+                            addresses = geocoder
+                                    .getFromLocationName(query,
+                                            MAX_RESULTS,
+                                            getLowerLeftLatitude(currentLocation),
+                                            getLowerLeftLongitude(currentLocation),
+                                            getUpperRightLatitude(currentLocation),
+                                            getUpperRightLongitude(currentLocation)
+                                    );
+
+                        } else {
+                            addresses = geocoder.getFromLocationName(query, MAX_RESULTS);
+                        }
+                    } catch (IOException ex) {
+
+                        mNotifyConnectiviyError = true;
+                        return null;
                     }
                 }
-                catch (IOException ex) {
-                    //TODO: handle this exception properly! set an empty view to the recycler view use it properly to communicate the error
-
+                else {
+                    mNotifyConnectiviyError = true;
                     return null;
                 }
 
@@ -144,6 +160,14 @@ public class SearchableActivity extends AppCompatActivity
     @Override
     public void onLoadFinished(Loader<List<Address>> loader, List<Address> data) {
         mAdapter.swapData(data);
+        mSearchProgressBar.setVisibility(View.GONE);
+
+        if(mNotifyConnectiviyError) {
+            mEmptyView.setVisibility(View.VISIBLE);
+            mEmptyView.setText(R.string.connectivity_error);
+
+            mNotifyConnectiviyError = false;
+        }
     }
 
     @Override

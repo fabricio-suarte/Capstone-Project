@@ -6,22 +6,23 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.fabriciosuarte.taskmanager.data.DatabaseContract.TaskColumns;
 
-public class TaskDbHelper extends SQLiteOpenHelper {
+class TaskDbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "tasks.db";
     private static final int DATABASE_VERSION = 1;
 
     private static final String SQL_CREATE_TABLE_TASKS = String.format("create table %s"
-            +" (%s integer primary key autoincrement, %s text, %s integer, %s integer, %s integer)",
+            +" (%s integer primary key autoincrement, %s text, %s integer, %s integer, %s integer, %s text)",
             DatabaseContract.TABLE_TASKS,
             TaskColumns._ID,
             TaskColumns.DESCRIPTION,
             TaskColumns.IS_COMPLETE,
             TaskColumns.IS_PRIORITY,
-            TaskColumns.DUE_DATE
+            TaskColumns.DUE_DATE,
+            TaskColumns.LOCATION
     );
 
-    public TaskDbHelper(Context context) {
+    TaskDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

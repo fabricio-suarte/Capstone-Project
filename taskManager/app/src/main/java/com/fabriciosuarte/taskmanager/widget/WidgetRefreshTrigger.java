@@ -7,7 +7,7 @@ import android.util.Log;
 
 /**
  * Responsible for receiving some ACTIONS like ACTION_TIME_CHANGED,
- * ACTION_TIMEZONE_CHANGED and ACTION_BOOT_COMPLETED in order to
+ * ACTION_TIMEZONE_CHANGED, LOCALE_CHANGED and ACTION_BOOT_COMPLETED in order to
  * properly trigger applications's broadcast REFRESH_WIDGET
  */
 
@@ -32,7 +32,8 @@ public class WidgetRefreshTrigger extends BroadcastReceiver {
 
         if(action.equalsIgnoreCase(Intent.ACTION_TIME_CHANGED) ||
                 action.equalsIgnoreCase(Intent.ACTION_TIMEZONE_CHANGED) ||
-                action.equalsIgnoreCase(Intent.ACTION_BOOT_COMPLETED)) {
+                action.equalsIgnoreCase(Intent.ACTION_BOOT_COMPLETED) ||
+                action.equalsIgnoreCase(Intent.ACTION_LOCALE_CHANGED)) {
 
             //Well... due to one of this events, we should reset our widget refresh alarm
             DueDateWidgetProvider.setDayShiftAlarm(context);

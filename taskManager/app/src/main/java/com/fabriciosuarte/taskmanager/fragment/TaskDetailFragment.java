@@ -47,13 +47,15 @@ public class TaskDetailFragment extends Fragment implements
     //region constants
 
     private static final int TASK_LOADER = 1;
-    public static final String TASK_URI_ARG = TaskDetailFragment.class.getName() + ".taskUriArg";
+    private static final String TASK_URI_ARG = TaskDetailFragment.class.getName() + ".taskUriArg";
+    private static final String TWO_PANEL_LAYOUT_ARG = TaskDetailFragment.class.getName() + "twoPanelLayoutArg";
 
     //endregion
 
     //region attributes
 
     private Uri mTaskUri;
+    private boolean mTwoPanelLayout;
     private TaskDetailFragment.Callback mFragmentListener;
 
     @BindView(R.id.detail_description)
@@ -67,6 +69,10 @@ public class TaskDetailFragment extends Fragment implements
 
     @BindView(R.id.detail_priority)
     ImageView mPriorityView;
+
+    @BindView(R.id.detail_empty)
+    View mEmptyView;
+
 
     //endregion
 
@@ -101,13 +107,16 @@ public class TaskDetailFragment extends Fragment implements
         Bundle args = this.getArguments();
         if(args != null) {
             mTaskUri = (Uri) args.get(TASK_URI_ARG);
+            mTwoPanelLayout = args.getBoolean(TWO_PANEL_LAYOUT_ARG);
         }
 
-        if(mTaskUri == null) {
+        if(mTaskUri == null && !mTwoPanelLayout) {
             throw new IllegalStateException("Task must be passed to this fragment as a valid provider Uri!");
         }
 
-        this.setHasOptionsMenu(true);
+        if(mTaskUri != null) {
+            this.setHasOptionsMenu(true);
+        }
     }
 
     @Override
@@ -147,8 +156,17 @@ public class TaskDetailFragment extends Fragment implements
 
         ButterKnife.bind(this, root);
 
-        if(savedInstanceState == null)
-            getLoaderManager().initLoader(TASK_LOADER, null, this);
+        if( this.showEmptyView()) {
+            mEmptyView.setVisibility(View.VISIBLE);
+        }
+        else {
+            if(savedInstanceState != null) {
+                getLoaderManager().restartLoader(TASK_LOADER, null, this);
+            }
+            else {
+                getLoaderManager().initLoader(TASK_LOADER, null, this);
+            }
+        }
 
         return root;
     }
@@ -222,6 +240,8 @@ public class TaskDetailFragment extends Fragment implements
             else{
                 mPriorityView.setBackgroundResource(R.drawable.ic_not_priority);
             }
+
+            this.getActivity().supportPostponeEnterTransition();
         }
     }
 
@@ -241,16 +261,31 @@ public class TaskDetailFragment extends Fragment implements
 
     //region static factory methods
 
-    public static TaskDetailFragment create(Uri taskUri) {
-        ArgumentHelper.validateNull(taskUri, "taskUri");
+    /**
+     * Creates a new instance of this fragment
+     * @param taskUri the task uri
+     * @param twoPaneLayout when set to "true", it will show an "empty message"
+     *        instead of launching an exception if no taskUri is given
+     * @return a new TaskDetailFragment instance
+     */
+    public static TaskDetailFragment create(Uri taskUri, boolean twoPaneLayout) {
 
         Bundle args = new Bundle();
         args.putParcelable(TASK_URI_ARG, taskUri);
+        args.putBoolean(TWO_PANEL_LAYOUT_ARG, twoPaneLayout);
 
         TaskDetailFragment fragment = new TaskDetailFragment();
         fragment.setArguments(args);
 
         return fragment;
+    }
+
+    //endregion
+
+    //region private aux methods
+
+    private boolean showEmptyView() {
+        return this.mTaskUri == null && mTwoPanelLayout;
     }
 
     //endregion

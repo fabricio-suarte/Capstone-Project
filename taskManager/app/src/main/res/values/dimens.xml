@@ -7,4 +7,15 @@
     <dimen name="checkbox_padding">8dp</dimen>
 
     <dimen name="toolbar_height">200dp</dimen>
+
+    <dimen name="detail_title_height">70dp</dimen>
+
+    <!-- widget stuff -->
+    <dimen name="widget_margin">4dp</dimen>
+
+    <!-- For width, following that formula: 70 * n - 30, where 'n' is the number of cells from Android
+     widget manager that you want your widget fill. Is this case, n=3 -->
+    <dimen name="widget_min_width">180dp</dimen>
+    <dimen name="widget_min_height">150dp</dimen>
+
 </resources>

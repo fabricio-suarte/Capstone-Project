@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <CheckBox
+        android:id="@+id/checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:padding="@dimen/checkbox_padding" />
+
+    <com.fabriciosuarte.taskmanager.view.TaskTitleView
+        android:id="@+id/text_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/checkbox"
+        android:layout_toStartOf="@+id/priority"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAppearance="?android:textAppearanceMedium"
+        tools:text="Call my girlfriend" />
+
+    <TextView
+        android:id="@+id/text_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:textAppearance="?android:textAppearanceSmall"
+        tools:text="12/31/2000" />
+
+    <ImageView
+        android:id="@+id/priority"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/text_date"
+        android:layout_alignEnd="@id/text_date"
+        android:backgroundTint="@color/colorAccent"
+        android:contentDescription="@null"/>
+
+</merge>

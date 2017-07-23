@@ -62,7 +62,7 @@ public class DatabaseContract {
     static int getColumnInt(Cursor cursor, String columnName) {
         return cursor.getInt( cursor.getColumnIndex(columnName) );
     }
-    static long getColumnLong(Cursor cursor, String columnName) {
+    public static long getColumnLong(Cursor cursor, String columnName) {
         return cursor.getLong( cursor.getColumnIndex(columnName) );
     }
 }

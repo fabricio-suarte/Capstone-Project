@@ -16,7 +16,6 @@ public class TaskTitleView extends AppCompatTextView {
     public static final int NORMAL = 0;
     public static final int DONE = 1;
     public static final int OVERDUE = 2;
-    private int mState;
 
     public TaskTitleView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
@@ -28,15 +27,6 @@ public class TaskTitleView extends AppCompatTextView {
 
     public TaskTitleView(Context context) {
         super(context);
-    }
-
-    /**
-     * Return the current display state of this view.
-     *
-     * @return One of {@link #NORMAL}, {@link #DONE}, or {@link #OVERDUE}.
-     */
-    public int getState() {
-        return mState;
     }
 
     /**
@@ -61,9 +51,6 @@ public class TaskTitleView extends AppCompatTextView {
                 setTextColor(ContextCompat.getColor(getContext(), R.color.red));
                 break;
             default:
-                return;
         }
-
-        mState = state;
     }
 }

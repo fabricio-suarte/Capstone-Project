@@ -23,11 +23,10 @@ import android.widget.TextView;
 import com.fabriciosuarte.taskmanager.LocationActivity;
 import com.fabriciosuarte.taskmanager.R;
 import com.fabriciosuarte.taskmanager.data.DatabaseContract;
+import com.fabriciosuarte.taskmanager.data.Task;
 import com.fabriciosuarte.taskmanager.data.TaskUpdateService;
 import com.fabriciosuarte.taskmanager.util.DateHelper;
 import com.fabriciosuarte.taskmanager.view.DatePickerFragment;
-
-import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -198,16 +197,8 @@ public class AddTaskFragment extends Fragment implements
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int day) {
-        //Set to noon on the selected day
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.YEAR, year);
-        c.set(Calendar.MONTH, month);
-        c.set(Calendar.DAY_OF_MONTH, day);
-        c.set(Calendar.HOUR_OF_DAY, 12);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-
-        this.setDateSelection(c.getTimeInMillis());
+        long dueDate = Task.getDueDateValue(year, month, day);
+        this.setDateSelection(dueDate);
     }
 
     //endregion

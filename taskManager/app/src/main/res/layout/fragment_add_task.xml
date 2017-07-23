@@ -12,11 +12,13 @@
     tools:context="com.fabriciosuarte.taskmanager.AddTaskActivity">
 
     <android.support.design.widget.TextInputLayout
+        style="@style/input_view"
         android:id="@+id/text_wrapper_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:textAppearanceMedium">
         <android.support.design.widget.TextInputEditText
+            style="@style/input_view"
             android:id="@+id/text_input_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,6 +27,7 @@
     </android.support.design.widget.TextInputLayout>
 
     <android.support.v7.widget.SwitchCompat
+        style="@style/input_view"
         android:id="@+id/switch_priority"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,6 +37,7 @@
         android:text="@string/task_priority"/>
 
     <TextView
+        style="@style/input_view"
         android:id="@+id/label_date"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/text_box_height"
@@ -44,6 +48,7 @@
         android:text="@string/task_date"/>
 
     <TextView
+        style="@style/input_view"
         android:id="@+id/text_date"
         android:layout_width="match_parent"
         android:layout_height="@dimen/text_box_height"
@@ -51,10 +56,12 @@
         android:layout_toEndOf="@id/label_date"
         android:layout_alignBaseline="@id/label_date"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:gravity="end"/>
+        android:gravity="end"
+        tools:text="not set"/>
 
 
     <TextView
+        style="@style/input_view"
         android:id="@+id/label_location"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/text_box_height"
@@ -65,6 +72,7 @@
         android:text="@string/task_location"/>
 
     <TextView
+        style="@style/input_view"
         android:id="@+id/text_location"
         android:layout_width="match_parent"
         android:layout_height="@dimen/text_box_height"
@@ -72,5 +80,6 @@
         android:layout_toEndOf="@id/label_date"
         android:layout_alignBaseline="@id/label_location"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:gravity="end"/>
+        android:gravity="end"
+        tools:text="not set"/>
 </RelativeLayout>

@@ -20,7 +20,7 @@
     <string name="action_delete">Delete Task</string>
     <string name="settings">Settings</string>
     <string name="reminder_title">Task Reminder</string>
-    <string name="past_reminder_scheduled">It is not possible to schedule a reminder in the past! :)</string>
+    <string name="past_reminder_scheduled">It is not possible to schedule a reminder in the past!</string>
 
     <string name="pref_sortOrderDialog_title">Sort Order</string>
     <string name="pref_sortBy_title">Sort By:</string>
@@ -46,10 +46,17 @@
     <string name="fragment_location_tag">fragmentLocationTAG</string>
     <string name="fragment_map_tag">fragmentMapTAG</string>
 
+    <string name="task_list_detail_empty_view">There is no added tasks.</string>
+    <string name="task_detail_empty_view">No selected task. Select a task from the Task List to see its details.</string>
     <string name="last_know_location_failed">It was not possible getting your last known location. </string>
     <string name="location_not_set_on_map">Location was not set on map. Try clicking on \'My location\' option or use the search</string>
     <string name="google_services_error">Google Services is not available. Try to update your device.</string>
     <string name="connectivity_error">Ops&#8230; Something went wrong. Check your connection and try again.</string>
     <string name="task_location_map_marker">Task location</string>
     <string name="fragment_callback_not_implemented">You must implement %s in order to attach this fragment!</string>
+
+    <string name="widget_label">Task Manager</string>
+    <string name="widget_description">Lists tasks that are expired or about to expire in the current day.</string>
+    <string name="widget_title">About to expire tasks</string>
+    <string name="widget_no_data_available">no tasks available</string>
 </resources>

@@ -3,6 +3,8 @@ package com.fabriciosuarte.taskmanager.data;
 import android.database.Cursor;
 import android.text.TextUtils;
 
+import java.util.Calendar;
+
 import static com.fabriciosuarte.taskmanager.data.DatabaseContract.*;
 
 /**
@@ -54,4 +56,24 @@ public class Task {
         return !TextUtils.isEmpty(this.location);
     }
 
+    /**
+     * Returns a due date value in milliseconds, for the given parameters and hour set for non.
+     * @param year Due date year
+     * @param month Due date monty
+     * @param day due date day
+     * @return long, representing the due date in milliseconds
+     */
+    public static long getDueDateValue(int year, int month, int day) {
+        //Set to noon on the selected day
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR, year);
+        c.set(Calendar.MONTH, month);
+        c.set(Calendar.DAY_OF_MONTH, day);
+        c.set(Calendar.HOUR_OF_DAY, 12);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+
+        return c.getTimeInMillis();
+    }
 }

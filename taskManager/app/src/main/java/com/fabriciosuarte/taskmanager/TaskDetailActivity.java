@@ -19,7 +19,7 @@ public class TaskDetailActivity extends AppCompatActivity
         this.setContentView(R.layout.activity_task_detail);
 
         Uri taskUri = this.getIntent().getData();
-        Fragment frag = TaskDetailFragment.create(taskUri);
+        Fragment frag = TaskDetailFragment.create(taskUri, false);
 
         this.getSupportFragmentManager()
                 .beginTransaction()

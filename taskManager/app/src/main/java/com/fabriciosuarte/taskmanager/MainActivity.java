@@ -1,5 +1,6 @@
 package com.fabriciosuarte.taskmanager;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -51,10 +52,14 @@ public class MainActivity extends AppCompatActivity
 
             if(savedInstanceState != null) {
                 mSelectedTask = savedInstanceState.getParcelable(SELECTED_TASK_STATE_KEY);
+            }
+            else {
 
-                if(mSelectedTask != null) {
-                    this.replaceDetailFragment();
-                }
+                //This activity should have been called by a click on a widget task item.
+                //In this case, we must receive the task uri.
+                mSelectedTask = this.getIntent().getData();
+
+                this.replaceDetailFragment();
             }
         }
     }
@@ -86,7 +91,8 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this, TaskDetailActivity.class);
             intent.setData(taskUri);
 
-            startActivity(intent);
+            startActivity(intent,
+                    ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
         }
     }
 
@@ -97,6 +103,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onTaskDeleted() {
 
+        if( this.isLargeLayoutSelected()) {
+            mSelectedTask = null;
+            this.replaceDetailFragment();
+        }
     }
 
     //endregion
@@ -110,7 +120,7 @@ public class MainActivity extends AppCompatActivity
 
     private void replaceDetailFragment() {
 
-        TaskDetailFragment fragment = TaskDetailFragment.create(mSelectedTask);
+        TaskDetailFragment fragment = TaskDetailFragment.create(mSelectedTask, this.isLargeLayoutSelected());
 
         this.getSupportFragmentManager()
                 .beginTransaction()

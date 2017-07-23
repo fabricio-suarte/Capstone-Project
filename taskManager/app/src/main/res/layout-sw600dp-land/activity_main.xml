@@ -34,7 +34,6 @@
         android:layout_below="@id/include_tool_bar"
         android:layout_marginTop="@dimen/card_view_detail_top_margin"
         android:layout_marginBottom="@dimen/card_view_vertical_margin"
-        android:layout_marginStart="@dimen/card_view_horizontal_margin"
         android:layout_marginEnd="@dimen/card_view_horizontal_margin"
         card_view:cardElevation="@dimen/card_view_elevation">
 

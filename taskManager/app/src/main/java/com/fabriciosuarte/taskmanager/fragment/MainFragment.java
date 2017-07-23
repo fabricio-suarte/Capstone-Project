@@ -24,6 +24,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.fabriciosuarte.taskmanager.AddTaskActivity;
 import com.fabriciosuarte.taskmanager.R;
@@ -32,6 +33,8 @@ import com.fabriciosuarte.taskmanager.TaskDetailActivity;
 import com.fabriciosuarte.taskmanager.data.DatabaseContract;
 import com.fabriciosuarte.taskmanager.data.TaskAdapter;
 import com.fabriciosuarte.taskmanager.data.TaskUpdateService;
+
+import org.w3c.dom.Text;
 
 /**
  * Application's main fragment
@@ -96,7 +99,8 @@ public class MainFragment extends Fragment implements
 
         View root = inflater.inflate(R.layout.fragment_main, container, true);
 
-        mAdapter = new TaskAdapter(null);
+        TextView emptyView = (TextView) root.findViewById(R.id.task_list_empty_view);
+        mAdapter = new TaskAdapter(null, emptyView, savedInstanceState);
         mAdapter.setOnItemClickListener(this);
 
         RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.recycler_view);
@@ -121,6 +125,15 @@ public class MainFragment extends Fragment implements
         this.getLoaderManager().initLoader(TASKS_LOADER, null, this);
 
         return root;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if(mAdapter != null) {
+            mAdapter.onSaveInstanceState(outState);
+        }
+
+        super.onSaveInstanceState(outState);
     }
 
     @Override

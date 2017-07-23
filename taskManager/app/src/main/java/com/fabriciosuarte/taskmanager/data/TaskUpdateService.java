@@ -13,13 +13,35 @@ import com.fabriciosuarte.taskmanager.reminders.ReminderAlarmService;
 
 /* Process DB actions on a background thread */
 public class TaskUpdateService extends IntentService {
+
+    //region constants
+
     private static final String TAG = TaskUpdateService.class.getSimpleName();
+
     //Intent actions
     public static final String ACTION_INSERT = TAG + ".INSERT";
     public static final String ACTION_UPDATE = TAG + ".UPDATE";
     public static final String ACTION_DELETE = TAG + ".DELETE";
 
     public static final String EXTRA_VALUES = TAG + ".ContentValues";
+
+    /**
+     * Represents the action for application data changed broadcast. Mainly use for widget updating.
+     */
+    public static final String ACTION_DATA_UPDATED
+            = TaskUpdateService.class.getPackage().getName() + ".ACTION_DATA_UPDATED";
+
+    //endregion
+
+    //region constructor
+
+    public TaskUpdateService() {
+        super(TAG);
+    }
+
+    //endregion
+
+    //region public methods
 
     public static void insertNewTask(Context context, ContentValues values) {
         Intent intent = new Intent(context, TaskUpdateService.class);
@@ -43,9 +65,9 @@ public class TaskUpdateService extends IntentService {
         context.startService(intent);
     }
 
-    public TaskUpdateService() {
-        super(TAG);
-    }
+    //endregion
+
+    //region IntentService overrides
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -58,7 +80,15 @@ public class TaskUpdateService extends IntentService {
         } else if (ACTION_DELETE.equals(intent.getAction())) {
             performDelete(intent.getData());
         }
+
+        //Sends the broadcast of "data updated", so we can have a chance to update any widget
+        Intent dataUpdated = new Intent(ACTION_DATA_UPDATED);
+        this.sendBroadcast(dataUpdated);
     }
+
+    //endregion
+
+    //region private aux methods
 
     private void performInsert(ContentValues values) {
         if (getContentResolver().insert(DatabaseContract.CONTENT_URI, values) != null) {
@@ -84,4 +114,6 @@ public class TaskUpdateService extends IntentService {
 
         Log.d(TAG, "Deleted "+count+" tasks");
     }
+
+    //endregion
 }

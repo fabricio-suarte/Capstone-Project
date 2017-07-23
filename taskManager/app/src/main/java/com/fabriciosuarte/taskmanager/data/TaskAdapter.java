@@ -1,6 +1,10 @@
 package com.fabriciosuarte.taskmanager.data;
 
+import android.content.res.ColorStateList;
 import android.database.Cursor;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,9 +25,22 @@ import java.util.Date;
  */
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> {
 
+    //region constants
+
+    private static final String SELECTED_ITEM_ID_STATE_KEY
+            = TaskAdapter.class.getCanonicalName() + "_SelectedItemIdKey";
+
+    private static final String SELECTED_ITEM_INDEX_STATE_KEY
+            = TaskAdapter.class.getCanonicalName() + "_SelectedItemIndexKey";
+
+    //endregion
+
     //region attributes
 
     private Cursor mCursor;
+    private TextView mEmptyView;
+    private long mSelectedItemId = -1;
+    private int mSelectedItemIndex = -1;
     private OnItemClickListener mOnItemClickListener;
 
     //endregion
@@ -32,8 +49,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> {
 
     /* Callback for list item click events */
     public interface OnItemClickListener {
-        void onItemClick(View v, int position);
 
+        void onItemClick(View v, int position);
         void onItemToggled(boolean active, int position);
     }
 
@@ -70,8 +87,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> {
 
     //region constructor
 
-    public TaskAdapter(Cursor cursor) {
+    public TaskAdapter(Cursor cursor, @NonNull TextView emptyView, Bundle savedInstanceState) {
+        mEmptyView = emptyView;
         mCursor = cursor;
+
+        if(savedInstanceState != null) {
+            mSelectedItemId = savedInstanceState.getLong(SELECTED_ITEM_ID_STATE_KEY);
+            mSelectedItemIndex = savedInstanceState.getInt(SELECTED_ITEM_INDEX_STATE_KEY);
+        }
     }
 
     //endregion
@@ -82,6 +105,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> {
     public TaskHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item_task, parent, false);
+
+        itemView.setFocusable(true);
 
         return new TaskHolder(itemView);
     }
@@ -126,6 +151,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> {
             else
                 holder.priorityView.setBackgroundResource(R.drawable.ic_not_priority);
 
+            ViewCompat.setActivated(holder.itemView, (task.id == mSelectedItemId));
         }
     }
 
@@ -144,6 +170,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> {
 
     //region public methods
 
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putLong(SELECTED_ITEM_ID_STATE_KEY, mSelectedItemId);
+        outState.putInt(SELECTED_ITEM_INDEX_STATE_KEY, mSelectedItemIndex);
+    }
+
     public void setOnItemClickListener(OnItemClickListener listener) {
         mOnItemClickListener = listener;
     }
@@ -153,6 +184,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> {
             mCursor.close();
         }
         mCursor = cursor;
+
+        if(mCursor == null || mCursor.getCount() == 0){
+            mEmptyView.setVisibility(View.VISIBLE);
+        }
+        else {
+            mEmptyView.setVisibility(View.GONE);
+        }
+
         notifyDataSetChanged();
     }
 
@@ -183,8 +222,24 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> {
     }
 
     private void postItemClick(TaskHolder holder) {
+
+        if(mSelectedItemIndex >= 0) {
+            //notify the item that was previously selected...
+            this.notifyItemChanged(mSelectedItemIndex);
+        }
+
+        int position = holder.getAdapterPosition();
+
+        //Updates the current item's id and index
+        mCursor.moveToPosition(position);
+        mSelectedItemId = DatabaseContract.getColumnLong(mCursor, DatabaseContract.TaskColumns._ID);
+        mSelectedItemIndex = position;
+
+        //notify the new selected item
+        this.notifyItemChanged(position);
+
         if (mOnItemClickListener != null) {
-            mOnItemClickListener.onItemClick(holder.itemView, holder.getAdapterPosition());
+            mOnItemClickListener.onItemClick(holder.itemView, position );
         }
     }
 

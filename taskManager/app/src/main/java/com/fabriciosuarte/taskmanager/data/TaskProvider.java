@@ -19,9 +19,13 @@ import android.util.Log;
 
 import com.fabriciosuarte.taskmanager.R;
 import com.fabriciosuarte.taskmanager.util.ArgumentHelper;
+import com.fabriciosuarte.taskmanager.widget.DueDateWidgetProvider;
 
 public class TaskProvider extends ContentProvider {
-    private static final String TAG = TaskProvider.class.getSimpleName();
+
+    //region constants
+
+    private static final String LOG_TAG = TaskProvider.class.getCanonicalName();
 
     private static final int CLEANUP_JOB_ID = 51;
 
@@ -35,10 +39,19 @@ public class TaskProvider extends ContentProvider {
     private static final String SINGLE_TASK_SELECTION =
             String.format("%s = ?", DatabaseContract.TaskColumns._ID);
 
+    private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+
+    //endregion
+
+    //region attributes
+
     private TaskDbHelper mDbHelper;
     private SQLiteQueryBuilder mQueryBuilder;
 
-    private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+    //endregion
+
+    //region package static blocks
+
     static {
         // content://com.google.developer.taskmaker/tasks
         sUriMatcher.addURI(DatabaseContract.CONTENT_AUTHORITY,
@@ -51,14 +64,24 @@ public class TaskProvider extends ContentProvider {
                 TASKS_WITH_ID);
     }
 
+    //endregion
+
+    //region ContentProvider overrides
+
     @Override
     public boolean onCreate() {
-        mDbHelper = new TaskDbHelper(getContext());
+
+        Context context = getContext();
+        mDbHelper = new TaskDbHelper(context);
 
         mQueryBuilder = new SQLiteQueryBuilder();
         mQueryBuilder.setTables(DatabaseContract.TABLE_TASKS);
 
-        manageCleanupJob( this.getContext());
+        manageCleanupJob( context);
+
+        //Starts the first alarm for widget refresh
+        DueDateWidgetProvider.setDayShiftAlarm(context);
+
         return true;
     }
 
@@ -208,6 +231,10 @@ public class TaskProvider extends ContentProvider {
         return count;
     }
 
+    //endregion
+
+    //region public methods
+
     /**
      * Cancels any previous jobs and schedule a new one according to what is set on preferences
      * @param context application context
@@ -223,6 +250,10 @@ public class TaskProvider extends ContentProvider {
         jobScheduler.cancelAll();
         manageCleanupJob(context);
     }
+
+    //endregion
+
+    //region private aux methods
 
     /* Initiate a periodic job to clear out completed items */
     private static void manageCleanupJob(Context context) {
@@ -252,7 +283,7 @@ public class TaskProvider extends ContentProvider {
         }
 
         int hours = (int) (jobInterval / 1000) / 3600;
-        Log.d(TAG, "Scheduling cleanup job for " + String.valueOf(hours) + " hours...");
+        Log.d(LOG_TAG, "Scheduling cleanup job for " + String.valueOf(hours) + " hours...");
 
         JobScheduler jobScheduler = (JobScheduler) context
                 .getSystemService(Context.JOB_SCHEDULER_SERVICE);
@@ -264,7 +295,7 @@ public class TaskProvider extends ContentProvider {
                 .build();
 
         if (jobScheduler.schedule(task) != JobScheduler.RESULT_SUCCESS) {
-            Log.w(TAG, "Unable to schedule cleanup job");
+            Log.w(LOG_TAG, "Unable to schedule cleanup job");
         }
     }
 
@@ -277,4 +308,6 @@ public class TaskProvider extends ContentProvider {
     private void throwUnknownUriException(Uri uri) {
         throw new UnsupportedOperationException("Unknown uri:" + uri.toString());
     }
+
+    //endregion
 }

@@ -12,6 +12,7 @@
         android:textAppearance="?android:textAppearanceMedium"
         android:textColor="@color/red"
         android:gravity="center_vertical"
+        android:drawablePadding="4dp"
         tools:text="Task 1!"/>
 
 </FrameLayout>

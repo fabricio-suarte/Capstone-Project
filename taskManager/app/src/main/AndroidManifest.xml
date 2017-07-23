@@ -77,10 +77,21 @@
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="com.fabriciosuarte.taskmanager.data.ACTION_DATA_UPDATED" />
+                <action android:name="com.fabriciosuarte.taskmanager.widget.ACTION_REFRESH_WIDGET" />
             </intent-filter>
 
             <meta-data android:name="android.appwidget.provider"
                 android:resource="@xml/widget_due_date" />
+        </receiver>
+
+        <!-- This receivers is going to track some actions in order to provide a way to
+             refresh the widget content -->
+        <receiver android:name=".widget.WidgetRefreshTrigger">
+            <intent-filter>
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
         </receiver>
 
         <!-- Services -->

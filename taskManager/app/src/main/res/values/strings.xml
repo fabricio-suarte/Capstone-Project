@@ -57,6 +57,6 @@
 
     <string name="widget_label">Task Manager</string>
     <string name="widget_description">Lists tasks that are expired or about to expire in the current day.</string>
-    <string name="widget_title">About to expire tasks</string>
+    <string name="widget_title">About to expire</string>
     <string name="widget_no_data_available">no tasks available</string>
 </resources>

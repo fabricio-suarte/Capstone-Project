@@ -14,6 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
+        android:contentDescription="@string/content_description_last_know_location"
         android:src="@drawable/ic_fab_my_location"
         android:layout_margin="@dimen/activity_horizontal_margin" />
 

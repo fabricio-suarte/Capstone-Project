@@ -9,6 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:contentDescription="@string/content_description_check_task_as_done"
         android:padding="@dimen/checkbox_padding" />
 
     <com.fabriciosuarte.taskmanager.view.TaskTitleView

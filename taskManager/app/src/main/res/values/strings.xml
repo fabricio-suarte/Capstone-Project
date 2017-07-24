@@ -59,4 +59,12 @@
     <string name="widget_description">Lists tasks that are expired or about to expire in the current day.</string>
     <string name="widget_title">About to expire</string>
     <string name="widget_no_data_available">no tasks available</string>
+
+    <string name="content_description_last_know_location">set on the map your last know location</string>
+    <string name="content_description_add_task">add a new task</string>
+    <string name="content_description_check_task_as_done">task done</string>
+    <string name="content_description_priority_task">it is a priority task</string>
+    <string name="content_description_not_priority_task">it is not a priority task</string>
+    <string name="content_description_widget_title">Task manager widget, tasks about to expire</string>
+
 </resources>

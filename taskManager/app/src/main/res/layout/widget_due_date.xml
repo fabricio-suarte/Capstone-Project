@@ -18,6 +18,7 @@
         android:padding="4dp"
         android:layout_marginBottom="4dp"
         android:background="@color/colorPrimaryDark"
+        android:contentDescription="@string/content_description_widget_title"
         android:text="@string/widget_title" />
 
     <ListView

@@ -12,7 +12,9 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        android:focusable="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        />
 
     <include layout="@layout/task_list_empty_view" />
 
@@ -22,6 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/activity_horizontal_margin"
+        android:contentDescription="@string/content_description_add_task"
         android:src="@drawable/ic_add"/>
 
 </android.support.design.widget.CoordinatorLayout>

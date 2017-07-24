@@ -236,9 +236,11 @@ public class TaskDetailFragment extends Fragment implements
 
             if(task.isPriority) {
                 mPriorityView.setBackgroundResource(R.drawable.ic_priority);
+                mPriorityView.setContentDescription( this.getString(R.string.content_description_priority_task));
             }
             else{
                 mPriorityView.setBackgroundResource(R.drawable.ic_not_priority);
+                mPriorityView.setContentDescription( this.getString(R.string.content_description_not_priority_task));
             }
 
             this.getActivity().supportPostponeEnterTransition();
